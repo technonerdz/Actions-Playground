@@ -1,0 +1,22 @@
+name: Desktop Screenshot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  screenshot:
+    runs-on: macos-latest
+
+    steps:
+    - name: Check out repository
+      uses: actions/checkout@v2
+
+    - name: Capture desktop screenshot
+      run: |
+        screencapture -x screenshot.png
+
+    - name: Upload screenshot as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshot
+        path: screenshot.png
