@@ -30,4 +30,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: screenshot-win-1
-        path: screenshot-win-1.png
+        path: screenshot-win-1.jpg
