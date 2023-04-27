@@ -26,62 +26,8 @@ jobs:
       with:
           file-name: 'screenshot-win-1.jpg'
 
-    - name: Capture desktop screenshot
-      run: |
-        Add-Type -TypeDefinition @"
-        using System;
-        using System.Runtime.InteropServices;
-        using System.Drawing;
-
-        public class Screenshot {
-            [DllImport("user32.dll")]
-            private static extern IntPtr GetDesktopWindow();
-
-            [DllImport("user32.dll")]
-            private static extern IntPtr GetDC(IntPtr hWnd);
-
-            [DllImport("user32.dll")]
-            private static extern IntPtr ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-            [DllImport("gdi32.dll")]
-            private static extern uint BitBlt(IntPtr hdcDest, int xDest, int yDest, int wDest, int hDest, IntPtr hdcSource, int xSrc, int ySrc, int rop);
-
-            public static void Capture() {
-                IntPtr hWnd = GetDesktopWindow();
-                IntPtr hDC = GetDC(hWnd);
-                Graphics g = Graphics.FromHdc(hDC);
-                Rectangle bounds = new Rectangle(Point.Empty, g.VisibleClipBounds.Size.ToSize());
-                IntPtr hDestDC = g.GetHdc();
-                IntPtr hSrcDC = GetDC(hWnd);
-
-                BitBlt(hDestDC, 0, 0, bounds.Width, bounds.Height, hSrcDC, 0, 0, 0x00CC0020);
-                g.ReleaseHdc(hDestDC);
-                g.Dispose();
-
-                Bitmap bmp = new Bitmap(bounds.Width, bounds.Height);
-                Graphics gBmp = Graphics.FromImage(bmp);
-                IntPtr hBmpDC = gBmp.GetHdc();
-
-                BitBlt(hBmpDC, 0, 0, bounds.Width, bounds.Height, hSrcDC, 0, 0, 0x00CC0020);
-                gBmp.ReleaseHdc(hBmpDC);
-                gBmp.Dispose();
-                ReleaseDC(hWnd, hSrcDC);
-
-                bmp.Save("screenshot-win-2.png");
-                bmp.Dispose();
-            }
-        }
-        "@
-
-        [Screenshot]::Capture()
-
     - name: Upload screenshot as artifact
       uses: actions/upload-artifact@v2
       with:
         name: screenshot-win-1
         path: screenshot-win-1.png
-    - name: Upload screenshot as artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: screenshot-win-2
-        path: screenshot-win-2.png
