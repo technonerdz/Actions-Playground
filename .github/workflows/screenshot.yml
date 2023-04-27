@@ -31,3 +31,22 @@ jobs:
       with:
         name: screenshot-win-1
         path: screenshot-win-1.jpg
+
+  screenshot-linux:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install dependencies
+      run: sudo apt-get install -y scrot
+
+    - name: Capture desktop screenshot
+      run: |
+        Xvfb :1 &
+        export DISPLAY=:1
+        scrot screenshot-linux.png
+
+    - name: Upload screenshot as artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshot-linux
+        path: screenshot-linux.png
