@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-echo "test1" > /test/test1
+echo "test1" > /test1
 on_chroot <<- \EOF
-    echo "test2" > /test/test2
+    echo "test2" > /test2
 EOF
