@@ -1,0 +1,20 @@
+name: Generate pi images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  pi-gen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: usimd/pi-gen-action@v1
+        id: build
+        with:
+          image-name: test
+          stage-list: stage0 stage1 stage2 ./test-stage-pi
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pi-gen-image
+          path: ${{ steps.build.outputs.image-path }}
