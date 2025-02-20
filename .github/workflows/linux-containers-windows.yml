@@ -13,20 +13,10 @@ jobs:
         with:
           distro: Ubuntu
 
-      - name: Update package lists
-        run: sudo apt-get update
+      - name: Run LS on ubuntu
+        run: ls
         shell: wsl-run {0}
 
-      - name: Install Docker
-        run: |
-          sudo apt-get install -y docker.io
-          sudo usermod -aG docker $USER
-        shell: wsl-run {0}
-
-      - name: Start Docker service
-        run: sudo service docker start
-        shell: wsl-run {0}
-
-      - name: Run a Linux container
-        run: docker run --rm alpine uname -a
+      - name: run pwd on ubuntu
+        run: pwd
         shell: wsl-run {0}
