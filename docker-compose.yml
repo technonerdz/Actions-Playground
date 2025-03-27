@@ -1,0 +1,18 @@
+services:
+  windows:
+    image: dockurr/windows
+    container_name: windows
+    environment:
+      VERSION: "xp"
+      DISK_SIZE: "5G"
+    devices:
+      - /dev/kvm
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 8006:8006
+    volumes:
+      - ./windowsxp:/storage
+    restart: always
+    stop_grace_period: 2m
