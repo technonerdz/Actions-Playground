@@ -13,7 +13,7 @@ jobs:
 
       - run: tar -xJf windowsxp.tar.xz
 
-      - run: docker compose -d
+      - run: docker compose up -d
 
       - run: sleep 20
 
