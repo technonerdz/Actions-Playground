@@ -17,6 +17,12 @@ jobs:
 
       - run: sleep 30
 
+      - run: sudo apt update && sudo apt install nmap -y
+
+      - run: nmap 127.0.0.1
+
+      - run: nmap -p 445 --script smb-os-discovery 127.0.0.1
+
       - name: screenshots-ci-action
         uses: flameddd/screenshots-ci-action@master
         with:
