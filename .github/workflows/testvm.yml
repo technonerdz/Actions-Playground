@@ -21,7 +21,7 @@ jobs:
 
       - run: docker exec windows /bin/bash -c "kill -9 203"
 
-      - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,fork TCP:20.20.20.21:445" &
+      - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:20.20.20.21:445" &
 
       - run: sudo apt update && sudo apt install nmap -y
 
