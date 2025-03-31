@@ -17,13 +17,17 @@ jobs:
 
       - run: sleep 10
 
-      - run: docker exec windows /bin/bash -c "apt update && apt install -y socat"
+      - run: docker exec windows /bin/bash -c "apt update && apt install -y socat nmap"
 
       - run: docker exec windows /bin/bash -c "kill -9 203"
 
       - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,fork TCP:20.20.20.21:445" &
 
       - run: sudo apt update && sudo apt install nmap -y
+
+      - run: docker exec windows /bin/bash -c "nmap 127.0.0.1"
+
+      - run: docker exec windows /bin/bash -c "nmap -p 445 --script smb-os-discovery 127.0.0.1"
 
       - run: nmap 127.0.0.1
 
