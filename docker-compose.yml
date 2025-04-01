@@ -14,5 +14,6 @@ services:
       - 8006:8006
     volumes:
       - ./windowsxp:/storage
+      - ~/.ssh/id_rsa:/root/.ssh/id_rsa
     restart: always
     stop_grace_period: 2m

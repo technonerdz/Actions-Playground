@@ -9,13 +9,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      #- run: wget "https://github.com/technonerdz/Actions-Playground/releases/download/windowstest/windowsxp.tar.xz"
+      - run: wget "https://github.com/technonerdz/Actions-Playground/releases/download/windowstest/windowsxp.tar.xz"
 
-      #- run: tar -xJf windowsxp.tar.xz
-
-      #- run: docker compose up -d
-
-      - run: sleep 10
+      - run: tar -xJf windowsxp.tar.xz
 
       - name: Install and Start SSH Server
         run: |
@@ -29,6 +25,9 @@ jobs:
           cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
           chmod 600 ~/.ssh/authorized_keys
 
+      - run: docker compose up -d
+
+      - run: sleep 10
       
       - run: ssh -o StrictHostKeyChecking=no runner@127.0.0.1 ls
       
@@ -36,9 +35,9 @@ jobs:
 
       - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
 
-      - run: docker exec windows /bin/bash -c "ssh runner@$(ip route | awk 'NR==1 {print $3}') ls"
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@$(ip route | awk 'NR==1 {print $3}') ls"
 
-      - run: docker exec windows /bin/bash -c "ssh -R 445:20.20.20.21:445 runner@$(ip route | awk 'NR==1 {print $3}')" &
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 445:20.20.20.21:445 runner@$(ip route | awk 'NR==1 {print $3}')" &
 
       - run: nmap 127.0.0.1
 
