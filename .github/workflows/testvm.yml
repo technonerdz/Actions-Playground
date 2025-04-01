@@ -44,7 +44,7 @@ jobs:
 
       - run: nmap 127.0.0.1
 
-      - run: nmap -p 445 --script smb-os-discovery 127.0.0.1
+      - run: nmap -p 4445 --script smb-os-discovery 127.0.0.1
 
       - name: screenshots-ci-action
         uses: flameddd/screenshots-ci-action@master
