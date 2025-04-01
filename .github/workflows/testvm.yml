@@ -35,9 +35,11 @@ jobs:
 
       - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
 
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@$(ip route | awk 'NR==1 {print $3}') ls"
+      - run: docker exec windows /bin/bash -c "echo $(ip route | awk 'NR==1 {print $3}')"
 
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 445:20.20.20.21:445 runner@$(ip route | awk 'NR==1 {print $3}')" &
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@172.17.0.1 ls"
+
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 445:20.20.20.21:445 runner@172.17.0.1" &
 
       - run: nmap 127.0.0.1
 
