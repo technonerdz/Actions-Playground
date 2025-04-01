@@ -26,6 +26,8 @@ jobs:
           echo "runner ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/runner
           sudo passwd -d runner  # Remove password for runner user
       
+      - run: ssh runner@127.0.0.1 ls
+      
       - run: sudo apt install nmap -y
 
       - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
