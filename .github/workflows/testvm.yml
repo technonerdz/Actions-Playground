@@ -17,17 +17,20 @@ jobs:
 
       - run: sleep 10
 
-      - run: docker exec windows /bin/bash -c "apt update && apt install -y socat nmap"
+      - name: Install and Start SSH Server
+        run: |
+          sudo apt update
+          sudo apt install -y openssh-server
+          sudo systemctl start ssh
+          sudo systemctl enable ssh
+          echo "runner ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/runner
+          sudo passwd -d runner  # Remove password for runner user
+      
+      - run: sudo apt install nmap -y
 
-      - run: docker exec windows /bin/bash -c "kill -9 203"
+      - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
 
-      - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:20.20.20.21:445" &
-
-      - run: sudo apt update && sudo apt install nmap -y
-
-      - run: docker exec windows /bin/bash -c "nmap 127.0.0.1"
-
-      - run: docker exec windows /bin/bash -c "nmap -p 445 --script smb-os-discovery 127.0.0.1"
+      - run: docker exec windows /bin/bash -c "ssh -R 445:20.20.20.21:445 runner@host.docker.internal" &
 
       - run: nmap 127.0.0.1
 
