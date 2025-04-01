@@ -32,19 +32,19 @@ jobs:
 
       - run: sleep 10
       
-      - run: ssh -o StrictHostKeyChecking=no runner@127.0.0.1 ls
+      - run: ssh -o StrictHostKeyChecking=no root@127.0.0.1 ls
       
       - run: sudo apt install nmap -y
 
       - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
 
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@172.17.0.1 ls"
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no root@172.17.0.1 ls"
 
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 4445:20.20.20.21:445 runner@172.17.0.1" &
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 445:20.20.20.21:445 root@172.17.0.1" &
 
       - run: nmap 127.0.0.1
 
-      - run: nmap -p 4445 --script smb-os-discovery 127.0.0.1
+      - run: nmap -p 445 --script smb-os-discovery 127.0.0.1
 
       - name: screenshots-ci-action
         uses: flameddd/screenshots-ci-action@master
