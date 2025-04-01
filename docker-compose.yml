@@ -12,7 +12,6 @@ services:
       - NET_ADMIN
     ports:
       - 8006:8006
-      - 445:445
     volumes:
       - ./windowsxp:/storage
     restart: always

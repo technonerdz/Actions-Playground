@@ -30,7 +30,7 @@ jobs:
 
       - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
 
-      - run: docker exec windows /bin/bash -c "ssh -R 445:20.20.20.21:445 runner@host.docker.internal" &
+      - run: docker exec windows /bin/bash -c "ssh -R 445:20.20.20.21:445 runner@$(ip route | awk 'NR==1 {print $3}')" &
 
       - run: nmap 127.0.0.1
 
