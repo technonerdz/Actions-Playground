@@ -33,13 +33,15 @@ jobs:
       
       - run: sudo apt install nmap -y
 
-      - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
+      - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh socar"
 
       - run: docker exec windows /bin/bash -c "echo $(ip route | awk 'NR==1 {print $3}')"
 
       - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@172.17.0.1 ls"
 
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 445:20.20.20.21:445 runner@172.17.0.1" &
+      - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:20.20.20.21:445" &
+
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -R 445:localhost:445 runner@172.17.0.1" &
 
       - run: nmap 127.0.0.1
 
