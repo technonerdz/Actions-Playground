@@ -12,6 +12,8 @@ services:
       - NET_ADMIN
     ports:
       - 8006:8006
+      - 445:445
+      - 139:139
     volumes:
       - ./windowsxp:/storage
       - ~/.ssh/id_rsa:/root/.ssh/id_rsa
