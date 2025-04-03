@@ -9,12 +9,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - run: wget "https://github.com/technonerdz/Actions-Playground/releases/download/windowstest/windowsxp.tar.xz"
-
-      - run: tar -xJf windowsxp.tar.xz
-
-      - name: Install and Start SSH Server
+      - name: Run windoiws machine with samba server
         run: |
+          wget "https://github.com/technonerdz/Actions-Playground/releases/download/windowstest/windowsxp.tar.xz"
+          tar -xJf windowsxp.tar.xz
           sudo apt update
           sudo apt install -y openssh-server
           # Enable TCP Forwarding
@@ -27,30 +25,17 @@ jobs:
           ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
           cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
           chmod 600 ~/.ssh/authorized_keys
+          docker compose up -d
+          sleep 10
+          sudo apt install nmap socat -y
+          docker exec windows /bin/bash -c "apt update && apt install -y ssh"
+          docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 4450:20.20.20.21:445 runner@172.17.0.1"
+          docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 1390:20.20.20.21:139 runner@172.17.0.1"
+          sudo socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:127.0.0.1:4450 &
+          sudo socat TCP-LISTEN:139,bind=0.0.0.0,fork TCP:127.0.0.1:1390 &
 
-      - run: docker compose up -d
-
-      - run: sleep 10
-      
-      - run: ssh -o StrictHostKeyChecking=no runner@127.0.0.1 ls
-      
-      - run: sudo apt install nmap socat -y
-
-      - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
-
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@172.17.0.1 ls"
-
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 4450:20.20.20.21:445 runner@172.17.0.1"
-      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 1390:20.20.20.21:139 runner@172.17.0.1"
-
-      - run: sudo socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:127.0.0.1:4450 &
-      - run: sudo socat TCP-LISTEN:139,bind=0.0.0.0,fork TCP:127.0.0.1:1390 &
-
-      - run: nmap 127.0.0.1
 
       - run: nmap -p 445 --script smb-os-discovery 127.0.0.1
-
-      - run: nmap -p 4450 --script smb-os-discovery 127.0.0.1
 
       - name: screenshots-ci-action
         uses: flameddd/screenshots-ci-action@master
