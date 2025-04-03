@@ -40,7 +40,7 @@ jobs:
 
       - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@172.17.0.1 ls"
 
-      - run: docker exec windows /bin/bash -c "ssh –f –N –T -o StrictHostKeyChecking=no -R 4455:20.20.20.21:445 runner@172.17.0.1"
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 4455:20.20.20.21:445 runner@172.17.0.1"
 
       - run: nmap 127.0.0.1
 
