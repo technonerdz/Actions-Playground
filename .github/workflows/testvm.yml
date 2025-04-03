@@ -13,26 +13,38 @@ jobs:
 
       - run: tar -xJf windowsxp.tar.xz
 
+      - name: Install and Start SSH Server
+        run: |
+          sudo apt update
+          sudo apt install -y openssh-server
+          # Enable TCP Forwarding
+          echo "AllowTcpForwarding yes" | sudo tee -a /etc/ssh/sshd_config
+          echo "GatewayPorts yes" | sudo tee -a /etc/ssh/sshd_config
+          sudo systemctl start ssh
+          sudo systemctl enable ssh
+          echo "runner ALL=(ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/runner
+          sudo passwd -d runner  # Remove password for runner user
+          ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ""
+          cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+          chmod 600 ~/.ssh/authorized_keys
+
       - run: docker compose up -d
 
       - run: sleep 10
+      
+      - run: ssh -o StrictHostKeyChecking=no runner@127.0.0.1 ls
+      
+      - run: sudo apt install nmap -y
 
-      - run: docker exec windows /bin/bash -c "apt update && apt install -y socat nmap"
+      - run: docker exec windows /bin/bash -c "apt update && apt install -y ssh"
 
-      - run: docker exec windows /bin/bash -c "pkill smbd"
+      - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no runner@172.17.0.1 ls"
 
-      - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:20.20.20.21:445" &
-      - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:139,bind=0.0.0.0,fork TCP:20.20.20.21:139" &
-
-      - run: sudo apt update && sudo apt install nmap -y
-
-      - run: docker exec windows /bin/bash -c "nmap 127.0.0.1"
-
-      - run: docker exec windows /bin/bash -c "nmap -p 445 --script smb-os-discovery 127.0.0.1"
+      - run: docker exec windows /bin/bash -c "ssh –f –N –T -o StrictHostKeyChecking=no -R 4455:20.20.20.21:445 runner@172.17.0.1"
 
       - run: nmap 127.0.0.1
 
-      - run: nmap -p 445 --script smb-os-discovery 127.0.0.1
+      - run: nmap -p 4455 --script smb-os-discovery 127.0.0.1
 
       - name: screenshots-ci-action
         uses: flameddd/screenshots-ci-action@master
