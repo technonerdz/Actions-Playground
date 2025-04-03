@@ -19,7 +19,7 @@ jobs:
 
       - run: docker exec windows /bin/bash -c "apt update && apt install -y socat nmap"
 
-      - run: docker exec windows /bin/bash -c "kill -9 $(pgrep -f smbd)"
+      - run: docker exec windows /bin/bash -c "pkill smbd"
 
       - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:20.20.20.21:445" &
       - run: docker exec windows /bin/bash -c "socat TCP-LISTEN:139,bind=0.0.0.0,fork TCP:20.20.20.21:139" &
