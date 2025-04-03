@@ -43,8 +43,8 @@ jobs:
       - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 4450:20.20.20.21:445 runner@172.17.0.1"
       - run: docker exec windows /bin/bash -c "ssh -o StrictHostKeyChecking=no -f -N -T -R 1390:20.20.20.21:139 runner@172.17.0.1"
 
-      - run: socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:127.0.0.1:4450"
-      - run: socat TCP-LISTEN:139,bind=0.0.0.0,fork TCP:127.0.0.1:1390"
+      - run: socat TCP-LISTEN:445,bind=0.0.0.0,fork TCP:127.0.0.1:4450" &
+      - run: socat TCP-LISTEN:139,bind=0.0.0.0,fork TCP:127.0.0.1:1390" &
 
       - run: nmap 127.0.0.1
 
